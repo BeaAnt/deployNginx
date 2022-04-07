@@ -12,7 +12,9 @@ jobs:
     steps:
     - name: Checkout the files
       uses: actions/checkout@v1
+      
     - name: Deploy to server
+      uses: easingthemes/ssh-deploy@main
       env:
         remote_path: /var/www/deployNginx
         remote_host: "${{ secrets.HOST_DNS }}" 
