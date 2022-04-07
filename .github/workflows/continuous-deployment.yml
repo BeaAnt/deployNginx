@@ -8,12 +8,10 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to server Nginx
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout the files
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v1
       env:
         remote_path: /var/www/project2
         remote_host: "${{ secrets.HOST_DNS }}" 
