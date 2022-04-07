@@ -13,7 +13,7 @@ jobs:
     - name: Checkout the files
     - uses: actions/checkout@v1
       env:
-        remote_path: /var/www/project2
+        remote_path: /var/www/deployNginx
         remote_host: "${{ secrets.HOST_DNS }}" 
         remote_user: "${{ secrets.USERNAME }}"
         remote_key: "${{ secrets.SSH_PRIVATE_KEY }}"
