@@ -13,19 +13,19 @@ jobs:
     - name: Checkout the files
       uses: actions/checkout@v1
 
-    - name: Hugo build
+    - name: Deploy
       run: |
-        sudo snap install hugo --channel=extended
-        hugo 
+          which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y  )
+          which rsync || ( apt-get update -y && apt-get install rsync -y )
+          eval $(ssh-agent -s)
+          ssh-add <(echo "$SSH_PRIVATE_KEY" )
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+          scp -r * root@$SERVER_IP:/var/www/html
+    env:
+      SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+      SERVER_IP: ${{secrets.HOST_DNS}}
+      CI: false
       
-    - name: SSH Setup
-      env:
-        remote_host: "${{ secrets.HOST_DNS }}" 
-        remote_user: "${{ secrets.USERNAME }}"
-        remote_key: "${{ secrets.SSH_PRIVATE_KEY }}"
-      run: |
-         echo test, and deploy your project.
-
-    - name: Rsync deployment
-      run: |
-                rsync -avz -e ssh --delete public/ ${{ secrets.USERNAME }}@${{ secrets.HOST_DNS }}:/var/www/
